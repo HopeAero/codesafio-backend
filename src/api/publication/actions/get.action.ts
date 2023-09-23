@@ -1,16 +1,16 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import { ExtendedRequest } from '../../../middlewares/auth'
 import { pool } from '../../../database'
 import { DEFAULT_PAGE, STATUS } from '../../../utils/constants'
 import { PaginateSettings, paginatedItemsResponse } from '../../../utils/responses'
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
 
-export const getUsers = async (
-  req: Request,
+export const getPublications = async (
+  req: ExtendedRequest,
   res: Response
-): Promise<Response> => {
+): Promise<any> => {
   const { page = DEFAULT_PAGE.page, size = DEFAULT_PAGE.size } = req.query
-
   try {
     let offset = (Number(page) - 1) * Number(size)
 
@@ -21,25 +21,26 @@ export const getUsers = async (
     const { rows } = await pool.query({
       text: `
         SELECT COUNT(*) 
-        FROM users
+        FROM publications
       `
     })
 
     const response = await pool.query({
       text: `
-      SELECT
-      user_id,
-      name,
-      email,
-      password,
-      role,
-      occupation,
-      personal_description,
-      TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-      FROM users 
-      ORDER BY user_id
-      LIMIT $1 OFFSET $2
-      `,
+        SELECT
+            publication_id,
+            name,
+            description,
+            application_description,
+            difficulty,
+            status,
+            user_lead_id,
+            TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
+            TO_CHAR(updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
+        FROM publications
+        ORDER BY publication_id
+        LIMIT $1 OFFSET $2
+        `,
       values: [size, offset]
     })
     const pagination: PaginateSettings = {
