@@ -29,7 +29,7 @@ export const getSkills = async (
       text: `
       SELECT
         skill_category_id,
-        skill_id
+        skill_id,
         name,
         TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
       FROM skills

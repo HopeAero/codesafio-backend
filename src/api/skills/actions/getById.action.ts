@@ -5,7 +5,7 @@ import { handleControllerError } from '../../../utils/responses/handleController
 import camelizeObject from '../../../utils/camelizeObject'
 import { StatusError } from '../../../utils/responses/status-error'
 
-export const getSkillCategoryById = async (
+export const getSkillByID = async (
   req: Request,
   res: Response
 ): Promise<Response> => {

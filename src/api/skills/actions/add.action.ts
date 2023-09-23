@@ -19,15 +19,16 @@ export const addSkill = async (
       `,
       values: [skillCategoryId, name]
     })
-    const insertedId: string = insertar.rows[0].category_skill_id
+    const insertedId: string = insertar.rows[0].skill_id
     const response = await pool.query({
       text: `
         SELECT
-          category_skill_id,
+          skill_category_id,
+          skill_id
           name,
           TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-        FROM skill_categories
-        WHERE skill_category_id = $1
+        FROM skills
+        WHERE skill_id = $1
       `,
       values: [insertedId]
     })
