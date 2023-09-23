@@ -79,7 +79,6 @@ export const addCollaborator = async (
                 user_id,
                 publication_id,
                 TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
-                TO_CHAR(updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
             FROM collaborators
             WHERE user_id = $1 AND publication_id = $2
         `,

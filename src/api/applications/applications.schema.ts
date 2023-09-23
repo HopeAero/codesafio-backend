@@ -4,9 +4,6 @@ export const ApplicationSchema = z.object({
   publicationId: z
     .number()
     .min(1, 'El id de categoria debe ser mayor o igual a 1'),
-  userId: z
-    .number()
-    .min(1, 'El id de categoria debe ser mayor o igual a 1'),
   isAccepted: z
     .boolean()
     .nullable()
