@@ -16,9 +16,11 @@ export const signUp = async (
     let { password } = req.body
     const registerData = [email, password]
     const { rows } = await pool.query({
-      text: `SELECT *
-                FROM users
-                WHERE email = $1`,
+      text: `
+        SELECT *
+        FROM users
+        WHERE email = $1
+      `,
       values: [registerData[0]]
     })
 
