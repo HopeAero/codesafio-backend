@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { pool } from '../../../database'
 import { AUTH_EXPIRE, AUTH_SECRET } from '../../../config'
 import { STATUS } from '../../../utils/constants'
-import { Admin } from '../../admins/admins.schema'
+import { User } from '../../users/users.schema'
 import { StatusError } from '../../../utils/responses/status-error'
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
@@ -23,12 +23,12 @@ export const signIn = async (
     const loginData = getLoginDataFromRequestBody(req)
     const { rows } = await pool.query({
       text: `SELECT * 
-              FROM admins 
+              FROM users 
               WHERE email = $1`,
       values: [loginData[0]]
     })
 
-    const data: Admin = camelizeObject(rows[0]) as Admin
+    const data: User = camelizeObject(rows[0]) as User
 
     const isPasswordCorrect =
       rows.length > 0
@@ -43,9 +43,10 @@ export const signIn = async (
     }
 
     const userForToken = {
-      id: data.adminId,
+      id: data.userId,
       name: data.name,
-      email: data.email
+      email: data.email,
+      role: data.role
     }
     const token = jwt.sign(userForToken, String(AUTH_SECRET), {
       expiresIn: String(AUTH_EXPIRE)
@@ -53,7 +54,7 @@ export const signIn = async (
 
     return res.status(STATUS.ACCEPTED).json({ ...userForToken, token })
   } catch (error: unknown) {
-    handleControllerError(error, res)
+    console.error(error)
+    return handleControllerError(error, res)
   }
-  return undefined
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { addUsers } from './actions/add.action'
-import { getUsers } from './actions/get,action'
+import { getUsers } from './actions/get.action'
 import { getUserById } from './actions/getById.action'
 import { UserSchema } from './users.schema'
 import { schemaGuard } from '../../middlewares/schemaGuard'
