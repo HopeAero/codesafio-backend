@@ -19,12 +19,16 @@ export const CollaboratorSchema = z.object({
     .optional()
 })
 
-// export const UpdateApplicationSchema = z.object({
-//   description: z
-//     .string()
-//     .max(500, 'La descripción no puede superar los 500 caracteres')
-//     .optional()
-// })
+export const UpdateApplicationSchema = z.object({
+  description: z
+    .string()
+    .max(500, 'La descripción no puede superar los 500 caracteres')
+    .optional(),
+  rating: z
+    .number()
+    .min(1, 'El rating minimo es de 1')
+    .optional()
+})
 
 export type Collaborator = z.infer<typeof CollaboratorSchema>
 

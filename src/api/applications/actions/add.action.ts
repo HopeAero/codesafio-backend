@@ -1,15 +1,38 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import { ExtendedRequest } from '../../../middlewares/auth'
 import { pool } from '../../../database'
 import { STATUS } from '../../../utils/constants'
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
+import { StatusError } from '../../../utils/responses/status-error'
 
 export const addApplication = async (
-  req: Request,
+  req: ExtendedRequest,
   res: Response
 ): Promise<Response> => {
   try {
-    const { publicationId, userId, isAccepted, description } = req.body
+    const userId = req.user.id
+    const { publicationId, isAccepted, description } = req.body
+
+    const verify = await pool.query({
+      text: `
+        SELECT
+          publication_id
+          user_lead_id
+        FROM publications
+        WHERE publication_id = $1 AND user_lead_id = $2
+      `,
+      values: [publicationId, userId]
+    })
+
+    if (verify.rowCount > 1) {
+      throw new StatusError({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        message: `No se puede postular un usuario a su mismo proyecto: ${publicationId} y Usuario ${userId}`,
+        statusCode: STATUS.NOT_FOUND
+      })
+    }
+
     const insertar = await pool.query({
       text: `
         INSERT INTO applications

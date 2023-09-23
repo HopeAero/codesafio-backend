@@ -1,40 +1,89 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import { ExtendedRequest } from '../../../middlewares/auth'
 import { pool } from '../../../database'
 import { STATUS } from '../../../utils/constants'
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
+import { StatusError } from '../../../utils/responses/status-error'
 
-export const addApplication = async (
-  req: Request,
+export const addCollaborator = async (
+  req: ExtendedRequest,
   res: Response
 ): Promise<Response> => {
   try {
-    const { publicationId, userId, isAccepted, description } = req.body
-    const insertar = await pool.query({
+    const { userId, publicationId, rating } = req.body
+    const userLeadId = req.user.id
+    const validate = await pool.query({
       text: `
-        INSERT INTO applications
-          (publication_id, user_id, is_accepted, description)
-          VALUES ($1, $2, $3, $4)
-        RETURNING publication_id, user_id
-      `,
-      values: [publicationId, userId, isAccepted, description]
+            SELECT
+                publication_id
+                user_id
+            FROM applications
+            WHERE user_id = $1 AND publication_id = $2
+        `,
+      values: [userId, publicationId]
     })
-    const insertedPublicationId: string = insertar.rows[0].publication_id
-    const insertedUserId: string = insertar.rows[0].user_id
+
+    if (validate.rowCount === 0) {
+      throw new StatusError({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        message: `No se pudo encontrar un usuario que aplico a este Proyecto: ${publicationId} y Usuario ${userId}`,
+        statusCode: STATUS.NOT_FOUND
+      })
+    }
+
+    const validate2 = await pool.query({
+      text: `
+                SELECT
+                    publication_id
+                    user_lead_id
+                FROM publications
+                WHERE user_lead_id = $1 AND publication_id = $2
+            `,
+      values: [userLeadId, publicationId]
+    })
+
+    if (validate2.rowCount === 0) {
+      throw new StatusError({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        message: `No se pudo encontrar un usuario que lidera este Proyecto: ${publicationId} y Usuario ${userLeadId}`,
+        statusCode: STATUS.NOT_FOUND
+      })
+    }
+
+    await pool.query({
+      text: `
+            INSERT INTO collaborators
+            (user_id, publication_id, rating)
+            VALUES ($1, $2, $3)
+            RETURNING *
+            `,
+      values: [userId, publicationId, rating]
+    })
+
+    await pool.query({
+      text: `
+            UPDATE applications
+            SET
+                    user_id = $1,
+                    publication_id = $2,
+                    is_accepted = true
+            WHERE user_id = $1 AND publication_id = $2
+        `,
+      values: [userId, publicationId]
+    })
+
     const response = await pool.query({
       text: `
-        SELECT
-          publication_id,
-          user_id,
-          is_accepted,
-          description,
-          TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-        FROM skill_categories
-        WHERE 
-          publication_id = $1 AND
-          user_id = $2
-      `,
-      values: [insertedPublicationId, insertedUserId]
+            SELECT
+                user_id,
+                publication_id,
+                TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
+                TO_CHAR(updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
+            FROM collaborators
+            WHERE user_id = $1 AND publication_id = $2
+        `,
+      values: [userId, publicationId]
     })
     return res.status(STATUS.CREATED).json(camelizeObject(response.rows[0]))
   } catch (error: unknown) {
