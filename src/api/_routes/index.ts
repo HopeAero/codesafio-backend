@@ -8,6 +8,7 @@ import authRouter from '../auth/auth.routes'
 import publicationRouter from '../publication/publication.routes'
 import collaboratorRouter from '../collaborators/collaborators.routes'
 import applicationRouter from '../applications/applications.routes'
+import userSkillRouter from '../user-skill/user-skill.routes'
 
 import { tokenGuard } from '../../middlewares/tokenGuard'
 import { isAdmin, verifyToken } from '../../middlewares/auth'
@@ -21,5 +22,6 @@ router.use('/auth', authRouter)
 router.use('/publications', tokenGuard(), verifyToken(), publicationRouter)
 router.use('/collaborators', tokenGuard(), verifyToken(), collaboratorRouter)
 router.use('/applications', tokenGuard(), verifyToken(), applicationRouter)
+router.use('/user/skills', tokenGuard(), verifyToken(), userSkillRouter)
 
 export default router
