@@ -3,7 +3,7 @@ export enum UserRole {
   USER = 'user',
 }
 
-export enum occupations {
+export enum Occupations {
   STUDENT = 'student',
   TEACHER = 'teacher',
   GRADUATED = 'graduated',
