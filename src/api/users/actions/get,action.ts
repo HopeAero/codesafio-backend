@@ -27,13 +27,13 @@ export const getUsers = async (
 
     const response = await pool.query({
       text: `
+      SELECT
       user_id,
       name,
       email,
       password,
       occupation,
-      personalDescription,
-      skillDescription,
+      personal_description,
       TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
       FROM users 
       ORDER BY user_id
