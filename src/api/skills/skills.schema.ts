@@ -17,6 +17,13 @@ export const SkillSchema = z.object({
     .optional()
 })
 
+export const UpdateSkillSchema = z.object({
+  name: z
+    .string()
+    .nonempty('Es necesario indicar un nombre para la categoria')
+    .max(64, 'El nombre de la categoria debe ser menor a 64 carácteres')
+})
+
 export type Skill = z.infer<typeof SkillSchema>
 
 export type SkillPayload = Omit<Skill, 'skillId' | 'createdAt'>

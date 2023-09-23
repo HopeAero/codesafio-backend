@@ -13,7 +13,7 @@ export const updateSkillCategory = async (
     const response = await pool.query({
       text: `
         UPDATE skill_categories
-        SET name = $1,
+        SET name = $1
         WHERE skill_category_id = $2
       `,
       values: [name, req.params.skillCategoryId]
@@ -24,7 +24,7 @@ export const updateSkillCategory = async (
         statusCode: STATUS.NOT_FOUND
       })
     }
-    return res.status(STATUS.OK).json({ message: 'Usuario modificado correctamente' })
+    return res.status(STATUS.OK).json({ message: 'Categoria de Habiidad modificada correctamente' })
   } catch (error) {
     console.log(error)
     return handleControllerError(error, res)

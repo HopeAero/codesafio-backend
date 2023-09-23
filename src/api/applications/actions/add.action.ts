@@ -51,7 +51,8 @@ export const addApplication = async (
           user_id,
           is_accepted,
           description,
-          TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
+          TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
+          TO_CHAR(updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
         FROM applications
         WHERE 
           publication_id = $1 AND
