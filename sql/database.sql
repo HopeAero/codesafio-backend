@@ -9,6 +9,7 @@ CREATE DOMAIN dom_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 CREATE TABLE skill_categories (
   skill_category_id INTEGER GENERATED ALWAYS AS IDENTITY,
   name dom_name UNIQUE NOT NULL,
+  created_at dom_created_at,
   PRIMARY KEY (skill_category_id)
 );
 
@@ -16,10 +17,11 @@ CREATE TABLE skills (
   skill_category_id INTEGER NOT NULL,
   skill_id INTEGER GENERATED ALWAYS AS IDENTITY,
   name dom_name UNIQUE NOT NULL,
+  created_at dom_created_at,
   PRIMARY KEY (skill_category_id, skill_id),
   CONSTRAINT skill_category_id_fk FOREIGN KEY (skill_category_id) 
     REFERENCES skill_categories (skill_category_id)
-    ON UPDATE CASCADEg
+    ON UPDATE CASCADE
     ON DELETE RESTRICT
 );
 
@@ -35,15 +37,17 @@ CREATE TABLE users (
   PRIMARY KEY (user_id)
 );
 
-CREATE TABLE projects (
-  project_id INTEGER GENERATED ALWAYS AS IDENTITY,
+CREATE TABLE publications (
+  publication_id INTEGER GENERATED ALWAYS AS IDENTITY,
   name dom_name NOT NULL,
   description dom_description DEFAULT NULL,
   application_description dom_description DEFAULT NULL,
   difficulty INTEGER NOT NULL,
   status dom_status NOT NULL DEFAULT 'not-started',
   user_lead_id INTEGER NOT NULL,
-  PRIMARY KEY (project_id),
+  created_at dom_created_at,
+  updated_at dom_created_at,
+  PRIMARY KEY (publication_id),
   CONSTRAINT user_lead_id_fk FOREIGN KEY (user_lead_id) REFERENCES users (user_id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
@@ -51,17 +55,52 @@ CREATE TABLE projects (
 );
 
 CREATE TABLE applications (
-  project_id INTEGER NOT NULL,
+  publication_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   is_accepted BOOLEAN DEFAULT NULL,
   description dom_description DEFAULT NULL,
-  PRIMARY KEY (project_id, user_id)
+  created_at dom_created_at,
+  updated_at dom_created_at,
+  PRIMARY KEY (publication_id, user_id),
+  CONSTRAINT publication_id_fk FOREIGN KEY (publication_id) 
+    REFERENCES publications (publication_id)
+      ON UPDATE CASCADE
+      ON DELETE RESTRICT,
+  CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
 );
 
-CREATE TABLE trabajadores (
-  project_id INTEGER NOT NULL,
+CREATE TABLE collaborators (
+  publication_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   description dom_description DEFAULT NULL,
   rating INTEGER NOT NULL,
-  PRIMARY KEY (project_id, user_id)
+  created_at dom_created_at,
+  PRIMARY KEY (publication_id, user_id),
+  CONSTRAINT publication_id_fk FOREIGN KEY (publication_id) 
+    REFERENCES publications (publication_id)
+      ON UPDATE CASCADE
+      ON DELETE RESTRICT,
+  CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
 );
+
+CREATE FUNCTION update_updated_at ()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_updated_at_publications
+BEFORE UPDATE ON publications
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER update_updated_at_applications
+BEFORE UPDATE ON applications
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at();
