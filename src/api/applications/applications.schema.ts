@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const ApplicationSchema = z.object({
-  projectId: z
+  publicationId: z
     .number()
     .min(1, 'El id de categoria debe ser mayor o igual a 1'),
   userId: z
@@ -17,6 +17,9 @@ export const ApplicationSchema = z.object({
     .optional(),
   createdAt: z
     .string()
+    .optional(),
+  updatedAt: z
+    .string()
     .optional()
 })
 
@@ -29,4 +32,4 @@ export const UpdateApplicationSchema = z.object({
 
 export type Application = z.infer<typeof ApplicationSchema>
 
-export type ApplicationPayload = Omit<Application, 'createdAt'>
+export type ApplicationPayload = Omit<Application, 'createdAt' | 'updatedAt'>

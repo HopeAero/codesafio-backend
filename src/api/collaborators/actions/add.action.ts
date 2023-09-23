@@ -29,7 +29,7 @@ export const addApplication = async (
           is_accepted,
           description,
           TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-        FROM applications
+        FROM skill_categories
         WHERE 
           publication_id = $1 AND
           user_id = $2

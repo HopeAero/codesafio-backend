@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { schemaGuard } from '../../middlewares/schemaGuard'
-import { ApplicationSchema, UpdateApplicationSchema } from './applications.schema'
+import { ApplicationSchema, UpdateApplicationSchema } from './collaborators.schema'
 
 import { getApplications } from './actions/get.action'
 import { getApplicationByPublicationId } from './actions/getByPublicationId.action'

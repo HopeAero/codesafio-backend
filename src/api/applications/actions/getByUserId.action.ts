@@ -13,14 +13,15 @@ export const getApplicationByUserId = async (
     const response = await pool.query({
       text: `
         SELECT
-          project_id,
+          publication_id,
           user_id,
           is_accepted,
           description,
           TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-        FROM project_id
+          TO_CHAR(updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
+        FROM applications
         WHERE user_id = $1
-          `,
+      `,
       values: [req.params.userId]
     })
     if (response.rowCount === 0) {

@@ -87,6 +87,10 @@ CREATE TABLE collaborators (
     ON DELETE RESTRICT
 );
 
+-- ||||||||||||||||||||||||||||||||||||||
+--              TRIGGERS
+-- |||||||||||||||||||||||||||||||||||||
+
 CREATE FUNCTION update_updated_at ()
 RETURNS TRIGGER AS $$
 BEGIN

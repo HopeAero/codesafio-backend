@@ -5,7 +5,7 @@ import { PaginateSettings, paginatedItemsResponse } from '../../../utils/respons
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
 
-export const getApplications = async (
+export const getCollaborators = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
@@ -21,7 +21,7 @@ export const getApplications = async (
     const { rows } = await pool.query({
       text: `
         SELECT COUNT(*) 
-        FROM applications
+        FROM collaborators
       `
     })
 
@@ -30,11 +30,10 @@ export const getApplications = async (
       SELECT
         publication_id,
         user_id,
-        is_accepted,
         description,
+        rating,
         TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-        TO_CHAR(updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
-      FROM applications
+      FROM collaborators
       ORDER BY publication_id
       LIMIT $1 OFFSET $2
       `,
