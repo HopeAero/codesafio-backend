@@ -18,8 +18,8 @@ export const getSkillCategoryById = async (
           TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
         FROM skill_categories
         WHERE skill_category_id = $1
-          `,
-      values: [req.params.userId]
+      `,
+      values: [req.params.skillCategoryId]
     })
     if (response.rowCount === 0) {
       throw new StatusError({

@@ -13,7 +13,7 @@ export const updateApplication = async (
     const response = await pool.query({
       text: `
         UPDATE applications
-        SET description = $1,
+        SET description = $1
         WHERE 
           publication_id = $2 AND
           user_id = $3

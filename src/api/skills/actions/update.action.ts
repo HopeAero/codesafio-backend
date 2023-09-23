@@ -9,14 +9,14 @@ export const updateSkill = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { skillCategoryId, name } = req.body
+    const { name } = req.body
     const response = await pool.query({
       text: `
         UPDATE skills
-        SET skill_category_id = $1, name = $2,
-        WHERE skill_id = $3
+        SET name = $1
+        WHERE skill_id = $2
       `,
-      values: [skillCategoryId, name, req.params.skillId]
+      values: [name, req.params.skillId]
     })
     if (response.rowCount === 0) {
       throw new StatusError({

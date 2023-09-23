@@ -27,7 +27,6 @@ export const UpdateApplicationSchema = z.object({
   description: z
     .string()
     .max(500, 'La descripción no puede superar los 500 caracteres')
-    .optional()
 })
 
 export type Application = z.infer<typeof ApplicationSchema>

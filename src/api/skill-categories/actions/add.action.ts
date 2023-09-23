@@ -12,9 +12,9 @@ export const addSkillCategory = async (
     const { name } = req.body
     const insertar = await pool.query({
       text: `
-        INSERT INTO users
+        INSERT INTO skill_categories
           (name)
-          VALUES ($1)
+        VALUES ($1)
         RETURNING skill_category_id
       `,
       values: [name]
