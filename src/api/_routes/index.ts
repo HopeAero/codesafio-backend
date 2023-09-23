@@ -1,12 +1,12 @@
 import { Router } from 'express'
 
 // APIs
-import adminsRouter from '../admins/admins.routes'
 import testRouter from '../test/test.routes'
+import userRouter from '../users/users.routes'
 
 const router = Router()
 
-router.use('/admins', adminsRouter)
+router.use('/users', userRouter)
 
 router.use('/test', testRouter)
 
