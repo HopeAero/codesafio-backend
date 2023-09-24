@@ -91,10 +91,10 @@ CREATE TABLE application_requirements (
   publication_id INTEGER NOT NULL,
   skill_category_id INTEGER NOT NULL,
   skill_id INTEGER NOT NULL,
-  level dom_description DEFAULT NULL,
+  level INTEGER DEFAULT NULL,
   quantity INTEGER NOT NULL,
   created_at dom_created_at,
-  PRIMARY KEY (publication_id, user_id),
+  PRIMARY KEY (publication_id, skill_category_id, skill_id),
   CONSTRAINT publication_id_fk FOREIGN KEY (publication_id) 
     REFERENCES publications (publication_id)
       ON UPDATE CASCADE
@@ -102,7 +102,8 @@ CREATE TABLE application_requirements (
   CONSTRAINT skills_fk FOREIGN KEY (skill_category_id, skill_id) 
     REFERENCES skills (skill_category_id, skill_id)
       ON UPDATE CASCADE
-      ON DELETE RESTRICT
+      ON DELETE RESTRICT,
+  CONSTRAINT level_chk CHECK((level >= 1) AND (level <= 4))
 );
 
 CREATE TABLE user_skills(
