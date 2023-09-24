@@ -11,7 +11,7 @@ export const addCollaborator = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { userId, publicationId, rating } = req.body
+    const { userId, publicationId, rating, description } = req.body
     const userLeadId = req.user.id
     const validate = await pool.query({
       text: `
@@ -54,11 +54,11 @@ export const addCollaborator = async (
     await pool.query({
       text: `
             INSERT INTO collaborators
-            (user_id, publication_id, rating)
-            VALUES ($1, $2, $3)
+            (user_id, publication_id, rating, description)
+            VALUES ($1, $2, $3, $4)
             RETURNING *
             `,
-      values: [userId, publicationId, rating]
+      values: [userId, publicationId, rating, description]
     })
 
     await pool.query({
