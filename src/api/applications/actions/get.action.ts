@@ -28,16 +28,15 @@ export const getApplications = async (
     const response = await pool.query({
       text: `
       SELECT
-      a.publication_id,
-      a.user_id,
-      a.is_accepted,
-      a.description AS application_description,
-      TO_CHAR(a.created_at, 'DD/MM/YYYY - HH12:MI AM') AS application_created_at,
-      TO_CHAR(a.updated_at, 'DD/MM/YYYY - HH12:MI AM') AS application_updated_at,
-      p.*
-      FROM applications AS a
-      INNER JOIN publications AS p ON a.publication_id = p.publication_id
-      ORDER BY a.publication_id
+        publication_id,
+        user_id,
+        is_accepted,
+        description AS application_description,
+        created_at,
+        updated_at
+      FROM 
+        applications
+      ORDER BY publication_id DESC
       LIMIT $1 OFFSET $2;
       `,
       values: [size, offset]

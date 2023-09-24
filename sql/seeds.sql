@@ -123,7 +123,8 @@ INSERT INTO applications (
 INSERT INTO collaborators (
   publication_id,
   user_id,
+  rating,
   created_at
 ) VALUES
   -- Offside
-  (1, 1, '2022-08-30 19:00:00');
+  (1, 1, 3, '2022-08-30 19:00:00');
