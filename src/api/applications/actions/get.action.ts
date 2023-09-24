@@ -40,6 +40,9 @@ export const getApplications = async (
         applications AS ap,
         publications AS pub,
         users AS us
+      WHERE
+        ap.publication_id = pub.publication_id AND
+        ap.user_id = us.user_id
       ORDER BY updated_at DESC
       LIMIT $1 OFFSET $2;
       `,
