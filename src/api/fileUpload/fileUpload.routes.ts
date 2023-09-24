@@ -1,8 +1,7 @@
-import { Router } from 'express'
-import { addFile } from './actions/addFile.action'
+import express, { Request, Response, NextFunction } from 'express'
+import multer from 'multer'
 
-const router = Router()
-
+const router = express.Router()
 /* eslint-disable @typescript-eslint/no-misused-promises */
 router.post('/', addFile)
 
