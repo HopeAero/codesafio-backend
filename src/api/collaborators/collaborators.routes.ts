@@ -8,12 +8,14 @@ import { getCollaboratorMineProject } from './actions/getMine.action'
 import { getParticipate } from './actions/getParticipate.action'
 import { updateCollaborator } from './actions/update.action'
 import { deleteColaborator } from './actions/delete.action'
+import { getPostulent } from './actions/getPostulante.action'
 
 const router = Router()
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 router.get('/all', getCollaboratorAll)
 router.get('/', getCollaborator)
+router.get('/project/:publicationId', getPostulent)
 router.get('/mine/:publicationId', getCollaboratorMineProject)
 router.get('/participate/:publicationId', getParticipate)
 router.get('/:publicationId', getCollaborator)
