@@ -14,6 +14,7 @@ interface Publication {
   difficulty: number
   status: string
   userLeadId: number
+  userLeadName: string
   createdAt: string
   updatedAt: string
 }
@@ -60,9 +61,11 @@ export const getPublications = async (
         p.difficulty,
         p.status,
         p.user_lead_id,
+        u.name AS user_lead_name,
         TO_CHAR(p.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
         TO_CHAR(p.updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
       FROM publications AS p
+      INNER JOIN users AS u ON p.user_lead_id = u.user_id
       LIMIT $1 OFFSET $2;
       `,
       values: [size, offset]
