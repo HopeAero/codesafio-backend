@@ -10,35 +10,87 @@ export const getUserById = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const response = await pool.query({
+    const responseUser = await pool.query({
       text: `
-      SELECT
-      u.user_id,
-      u.name,
-      u.email,
-      u.occupation,
-      u.personal_description,
-      TO_CHAR(u.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
-      a.publication_id AS application_project_id,
-      c.publication_id AS collaborator_project_id,
-      ap.name AS application_project_name,
-      cp.name AS collaborator_project_name
-      FROM users u
-      LEFT JOIN applications a ON u.user_id = a.user_id
-      LEFT JOIN collaborators c ON u.user_id = c.user_id
-      LEFT JOIN publications ap ON a.publication_id = ap.publication_id
-      LEFT JOIN publications cp ON c.publication_id = cp.publication_id
-      WHERE u.user_id = $1;
-          `,
+        SELECT
+          user_id,
+          name,
+          email,
+          role,
+          occupation,
+          personal_description,
+          created_at
+        FROM users
+        WHERE user_id = $1
+      `,
       values: [req.params.userId]
     })
-    if (response.rowCount === 0) {
+    if (responseUser.rowCount === 0) {
       throw new StatusError({
         message: `No se pudo encontrar el registro de id: ${req.params.userId}`,
         statusCode: STATUS.NOT_FOUND
       })
     }
-    return res.status(STATUS.OK).json(camelizeObject(response.rows[0]))
+    const { rows: responseSkills } = await pool.query({
+      text: `
+        SELECT
+          us.skill_category_id,
+          sc.name AS skill_category_name,
+          us.skill_id,
+          s.name AS skill_name,
+          us.level
+        FROM 
+          user_skills AS us,
+          skill_categories AS sc,
+          skills AS s
+        WHERE 
+          us.user_id = 2 AND
+          sc.skill_category_id = us.skill_category_id AND
+          s.skill_id = us.skill_id
+      `,
+      values: [req.params.userId]
+    })
+    const { rows: responsePublications } = await pool.query({
+      text: `
+        SELECT
+          publication_id,
+          name,
+          description,
+          application_description,
+          difficulty,
+          status,
+          created_at,
+          updated_at
+        FROM publications
+        WHERE user_lead_id = $1
+        LIMIT 3
+      `,
+      values: [req.params.userId]
+    })
+    const { rows: responseCollaborators } = await pool.query({
+      text: `
+        SELECT
+          col.publication_id,
+          col.description,
+          col.rating,
+          col.created_at
+        FROM 
+          collaborators AS col,
+          publications AS pub
+        WHERE 
+          user_id = $1 AND
+          pub.status = 'finished'
+        LIMIT 3
+      `,
+      values: [req.params.userId]
+    })
+
+    return res.status(STATUS.OK).json({
+      ...camelizeObject(responseUser.rows[0]),
+      skills: camelizeObject(responseSkills),
+      publications: camelizeObject(responsePublications),
+      collaborators: camelizeObject(responseCollaborators)
+    })
   } catch (error) {
     console.log(error)
     return handleControllerError(error, res)

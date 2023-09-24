@@ -42,7 +42,6 @@ INSERT INTO publications (
   difficulty, 
   user_lead_id
 ) VALUES
-  ('Publicaci¾n 1', 'Descripci¾n de la publicación 1', 'Descripci¾n de la aplicación 1', 3, 1),
-  ('Publicaci¾n 2', 'Descripci¾n de la publicación 2', 'Descripci¾n de la aplicación 2', 2, 2),
-  ('Publicaci¾n 3', 'Descripci¾n de la publicación 3', 'Descripci¾n de la aplicación 3', 4, 3);
-  
+  ('Publicaci¾n 1', 'Descripci¾n de la publicaci¾n 1', 'Descripci¾n de la aplicación 1', 3, 1),
+  ('Publicaci¾n 2', 'Descripci¾n de la publicaci¾n 2', 'Descripci¾n de la aplicación 2', 2, 2),
+  ('Publicaci¾n 3', 'Descripci¾n de la publicaci¾n 3', 'Descripci¾n de la aplicación 3', 4, 3);
