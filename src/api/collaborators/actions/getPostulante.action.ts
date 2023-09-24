@@ -32,17 +32,17 @@ export const getPostulent = async (
 
     const response = await pool.query({
       text: `
-        SELECT
-        a.user_id,
-        u.name AS user_name,
-        a.description,
-        a.publication_id,
-        TO_CHAR(a.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-        FROM applications AS a
-        JOIN users AS u ON a.user_id = u.user_id
-        WHERE a.publication_id = $1 AND a.is_accepted = null
-        ORDER BY a.publication_id;
-    
+      SELECT
+      a.user_id,
+      u.name AS user_name,
+      a.description,
+      a.publication_id,
+      TO_CHAR(a.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
+  FROM applications AS a
+  JOIN users AS u ON a.user_id = u.user_id
+  WHERE a.publication_id = 1 AND a.is_accepted IS NULL
+  ORDER BY a.publication_id;
+  
         `,
       values: [publicationId]
 
