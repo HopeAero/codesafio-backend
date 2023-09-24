@@ -28,12 +28,14 @@ export const getSkills = async (
     const response = await pool.query({
       text: `
       SELECT
-        skill_category_id,
-        skill_id,
-        name,
-        TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-      FROM skills
-      ORDER BY skill_category_id
+      s.skill_category_id,
+      s.skill_id,
+      s.name AS skill_name,
+      sc.name AS skill_category_name,
+      TO_CHAR(s.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
+      FROM skills s
+      JOIN skill_categories sc ON s.skill_category_id = sc.skill_category_id
+      ORDER BY s.skill_category_id
       LIMIT $1 OFFSET $2
       `,
       values: [size, offset]

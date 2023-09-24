@@ -5,27 +5,6 @@ import { PaginateSettings, paginatedItemsResponse } from '../../../utils/respons
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
 
-interface FormattedResult {
-  application: {
-    publication: {
-      publicationId: number
-      name: string
-      description: string | null
-      difficulty: number
-      status: string
-      userLeadId: number
-      createdAt: string
-      updatedAt: string
-    }
-    applicationId: number | null
-    userId: number
-    isAccepted: boolean | null
-    applicationDescription: string | null
-    applicationCreatedAt: string
-    applicationUpdatedAt: string
-  }
-}
-
 export const getApplications = async (
   req: Request,
   res: Response
@@ -66,26 +45,25 @@ export const getApplications = async (
 
     const row = response.rows
 
-    const formattedResults: FormattedResult[] = row.map((row) => {
+    const formattedResults: any[] = row.map((row) => {
       return {
-        application: {
-          publication: {
-            publicationId: row.publication_id,
-            name: row.name,
-            description: row.description,
-            difficulty: row.difficulty,
-            status: row.status,
-            userLeadId: row.user_lead_id,
-            createdAt: row.created_at,
-            updatedAt: row.updated_at
-          },
-          applicationId: row.application_id,
-          userId: row.user_id,
-          isAccepted: row.is_accepted,
-          applicationDescription: row.application_description,
-          applicationCreatedAt: row.application_created_at,
-          applicationUpdatedAt: row.application_updated_at
-        }
+        publication: {
+          publicationId: row.publication_id,
+          name: row.name,
+          description: row.description,
+          difficulty: row.difficulty,
+          status: row.status,
+          userLeadId: row.user_lead_id,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at
+        },
+        applicationId: row.application_id,
+        userId: row.user_id,
+        isAccepted: row.is_accepted,
+        applicationDescription: row.application_description,
+        applicationCreatedAt: row.application_created_at,
+        applicationUpdatedAt: row.application_updated_at
+
       }
     })
 

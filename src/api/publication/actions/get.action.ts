@@ -34,6 +34,7 @@ export const getPublications = async (
           p.application_description,
           p.difficulty,
           p.status,
+          u.name AS user_lead_name,
           p.user_lead_id,
           TO_CHAR(p.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
           TO_CHAR(p.updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at,
@@ -50,6 +51,8 @@ export const getPublications = async (
           ON ar.skill_id = s.skill_id
         LEFT JOIN skill_categories sc
           ON ar.skill_category_id = sc.skill_category_id
+        LEFT JOIN users u
+          ON p.user_lead_id = u.user_id
         ORDER BY p.publication_id
         LIMIT $1 OFFSET $2
       `,
@@ -63,6 +66,7 @@ export const getPublications = async (
       application_description: row.application_description,
       difficulty: row.difficulty,
       status: row.status,
+      user_lead_name: row.user_lead_name,
       user_lead_id: row.user_lead_id,
       created_at: row.created_at,
       updated_at: row.updated_at,
