@@ -44,7 +44,7 @@ export const getUserById = async (
           skill_categories AS sc,
           skills AS s
         WHERE 
-          us.user_id = 2 AND
+          us.user_id = $1 AND
           sc.skill_category_id = us.skill_category_id AND
           s.skill_id = us.skill_id
       `,
@@ -71,6 +71,7 @@ export const getUserById = async (
       text: `
         SELECT
           col.publication_id,
+          pub.name AS publication_name,
           col.description,
           col.rating,
           col.created_at
