@@ -6,6 +6,31 @@ import { PaginateSettings, paginatedItemsResponse } from '../../../utils/respons
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
 
+interface Publication {
+  publicationId: number
+  projectName: string
+  projectDescription: string
+  applicationDescription: string
+  difficulty: number
+  status: string
+  userLeadId: number
+  createdAt: string
+  updatedAt: string
+}
+
+interface Skill {
+  publicationId: number
+  skillCategoryId: number
+  skillId: number
+  level: number
+  createdAt: string
+}
+
+interface CombinedProject {
+  publication: Publication
+  skills: Skill[]
+}
+
 export const getPublications = async (
   req: ExtendedRequest,
   res: Response
@@ -27,58 +52,36 @@ export const getPublications = async (
 
     const response = await pool.query({
       text: `
-        SELECT
-          p.publication_id,
-          p.name AS project_name,
-          p.description AS project_description,
-          p.application_description,
-          p.difficulty,
-          p.status,
-          u.name AS user_lead_name,
-          p.user_lead_id,
-          TO_CHAR(p.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
-          TO_CHAR(p.updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at,
-          ar.skill_category_id,
-          ar.skill_id,
-          s.name AS skill_name,
-          sc.name AS skill_category_name,
-          ar.level,
-          ar.quantity
-        FROM publications p
-        LEFT JOIN application_requirements ar
-          ON p.publication_id = ar.publication_id
-        LEFT JOIN skills s
-          ON ar.skill_id = s.skill_id
-        LEFT JOIN skill_categories sc
-          ON ar.skill_category_id = sc.skill_category_id
-        LEFT JOIN users u
-          ON p.user_lead_id = u.user_id
-        ORDER BY p.publication_id
-        LIMIT $1 OFFSET $2
+      SELECT
+        p.publication_id,
+        p.name AS project_name,
+        p.description AS project_description,
+        p.application_description,
+        p.difficulty,
+        p.status,
+        p.user_lead_id,
+        TO_CHAR(p.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
+        TO_CHAR(p.updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
+      FROM publications AS p
+      LIMIT $1 OFFSET $2;
       `,
       values: [size, offset]
     })
 
-    const publicationsData: any[] = response.rows.map((row) => ({
-      publication_id: row.publication_id,
-      project_name: row.project_name,
-      project_description: row.project_description,
-      application_description: row.application_description,
-      difficulty: row.difficulty,
-      status: row.status,
-      user_lead_name: row.user_lead_name,
-      user_lead_id: row.user_lead_id,
-      created_at: row.created_at,
-      updated_at: row.updated_at,
-      skills: {
-        skill_category_id: row.skill_category_id,
-        skill_id: row.skill_id,
-        skill_name: row.skill_name,
-        skill_category_name: row.skill_category_name,
-        level: row.level,
-        quantity: row.quantity
-      }
-    }))
+    const response2 = await pool.query({
+      text: `
+      SELECT
+      publication_id,
+      skill_category_id,
+      skill_id,
+      level,
+      TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
+      FROM application_requirements
+      WHERE publication_id = $1
+      ORDER BY publication_id
+      `,
+      values: [response.rows[0].publication_id]
+    })
 
     const pagination: PaginateSettings = {
       total: Number(rows[0].count),
@@ -86,7 +89,20 @@ export const getPublications = async (
       perPage: Number(size)
     }
 
-    return paginatedItemsResponse(res, STATUS.OK, camelizeObject(publicationsData) as Array<Record<string, any>>, pagination)
+    // Obtén los datos de proyectos y habilidades requeridas
+    const projectData: Publication[] = camelizeObject(response.rows) as Publication[]
+    const skillData: Skill[] = camelizeObject(response2.rows) as Skill[]
+
+    // Combina los datos de proyectos y habilidades requeridas
+    const combinedData: CombinedProject[] = projectData.map((publication) => {
+      const projectSkills: Skill[] = skillData.filter(
+        (skill) => skill.publicationId === publication.publicationId
+      )
+      return { publication, skills: projectSkills }
+    })
+
+    // Ahora, response contendrá la estructura deseada
+    return paginatedItemsResponse(res, STATUS.OK, combinedData, pagination)
   } catch (error: unknown) {
     console.log(error)
     return handleControllerError(error, res)
