@@ -10,6 +10,7 @@ import collaboratorRouter from '../collaborators/collaborators.routes'
 import applicationRouter from '../applications/applications.routes'
 import userSkillRouter from '../user-skill/user-skill.routes'
 import aplicationR from '../application-requirements/applicationR.routes'
+import fileUploadRouter from '../fileUpload/fileUpload.routes'
 
 import { tokenGuard } from '../../middlewares/tokenGuard'
 import { verifyToken } from '../../middlewares/auth'
@@ -25,5 +26,6 @@ router.use('/collaborators', tokenGuard(), verifyToken(), collaboratorRouter)
 router.use('/applications', tokenGuard(), verifyToken(), applicationRouter)
 router.use('/applications-requirements', tokenGuard(), verifyToken(), aplicationR)
 router.use('/user/skills', tokenGuard(), verifyToken(), userSkillRouter)
+router.use('/uploads', tokenGuard(), verifyToken(), fileUploadRouter)
 
 export default router
