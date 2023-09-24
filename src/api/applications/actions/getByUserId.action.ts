@@ -28,16 +28,24 @@ export const getApplicationsByUserID = async (
     const response = await pool.query({
       text: `
         SELECT
-          publication_id,
-          user_id,
-          is_accepted,
-          description,
-          TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
-          TO_CHAR(updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
-        FROM applications
-        WHERE user_id = $1
+          ap.publication_id,
+          pub.name AS publication_name,
+          ap.user_id,
+          us.name AS user_name,
+          ap.is_accepted,
+          ap.description,
+          TO_CHAR(ap.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
+          TO_CHAR(ap.updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
+        FROM 
+          applications AS ap,
+          publications AS pub,
+          users AS us
+        WHERE 
+          ap.user_id = $3 AND
+          ap.publication_id = pub.publication_id AND
+          ap.user_id = us.user_id
         ORDER BY publication_id
-        LIMIT $2 OFFSET $3
+        LIMIT $1 OFFSET $2
       `,
       values: [size, offset, req.params.userId]
     })

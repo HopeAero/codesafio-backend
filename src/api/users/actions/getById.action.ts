@@ -73,6 +73,7 @@ export const getUserById = async (
       text: `
         SELECT
           col.publication_id,
+          pub.name AS publication_name,
           col.description,
           col.rating,
           col.created_at
