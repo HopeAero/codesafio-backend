@@ -6,14 +6,15 @@ import { UserSchema } from './users.schema'
 import { schemaGuard } from '../../middlewares/schemaGuard'
 import { updateUsers } from './actions/update.action'
 import { deleteUsers } from './actions/delete.action'
+import { isAdmin } from '../../middlewares/auth'
 
 const router = Router()
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
-router.get('/', getUsers)
+router.get('/', isAdmin(), getUsers)
 router.get('/:userId', getUserById)
-router.post('/', schemaGuard(UserSchema), addUsers)
+router.post('/', isAdmin(), schemaGuard(UserSchema), addUsers)
 router.put('/:userId', schemaGuard(UserSchema), updateUsers)
-router.delete('/:userId', deleteUsers)
+router.delete('/:userId', isAdmin(), deleteUsers)
 
 export default router

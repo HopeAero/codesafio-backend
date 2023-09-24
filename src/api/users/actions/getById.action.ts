@@ -12,16 +12,23 @@ export const getUserById = async (
   try {
     const response = await pool.query({
       text: `
-        SELECT
-          user_id,
-          name,
-          email,
-          password,
-          occupation,
-          personal_description,
-          TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-          FROM users
-          WHERE user_id = $1
+      SELECT
+      u.user_id,
+      u.name,
+      u.email,
+      u.occupation,
+      u.personal_description,
+      TO_CHAR(u.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
+      a.publication_id AS application_project_id,
+      c.publication_id AS collaborator_project_id,
+      ap.name AS application_project_name,
+      cp.name AS collaborator_project_name
+      FROM users u
+      LEFT JOIN applications a ON u.user_id = a.user_id
+      LEFT JOIN collaborators c ON u.user_id = c.user_id
+      LEFT JOIN publications ap ON a.publication_id = ap.publication_id
+      LEFT JOIN publications cp ON c.publication_id = cp.publication_id
+      WHERE u.user_id = $1;
           `,
       values: [req.params.userId]
     })

@@ -12,13 +12,13 @@ import userSkillRouter from '../user-skill/user-skill.routes'
 import aplicationR from '../application-requirements/applicationR.routes'
 
 import { tokenGuard } from '../../middlewares/tokenGuard'
-import { isAdmin, verifyToken } from '../../middlewares/auth'
+import { verifyToken } from '../../middlewares/auth'
 
 const router = Router()
 
 router.use('/skill-categories', skillCategoriesRouter)
 router.use('/skills', skillsRouter)
-router.use('/users', tokenGuard(), verifyToken(), isAdmin(), userRouter)
+router.use('/users', tokenGuard(), verifyToken(), userRouter)
 router.use('/auth', authRouter)
 router.use('/publications', tokenGuard(), verifyToken(), publicationRouter)
 router.use('/collaborators', tokenGuard(), verifyToken(), collaboratorRouter)
