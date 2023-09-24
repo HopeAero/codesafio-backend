@@ -6,7 +6,7 @@ import { PaginateSettings, paginatedItemsResponse } from '../../../utils/respons
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
 import camelizeObject from '../../../utils/camelizeObject'
 
-interface Publication {
+export interface Publication {
   publicationId: number
   projectName: string
   projectDescription: string
@@ -19,7 +19,7 @@ interface Publication {
   updatedAt: string
 }
 
-interface Skill {
+export interface Skill {
   publicationId: number
   skillCategoryId: number
   skillId: number
@@ -27,7 +27,7 @@ interface Skill {
   createdAt: string
 }
 
-interface CombinedProject {
+export interface CombinedProject {
   publication: Publication
   skills: Skill[]
 }
