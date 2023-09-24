@@ -40,7 +40,7 @@ export const getPostulent = async (
         TO_CHAR(a.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
         FROM applications AS a
         JOIN users AS u ON a.user_id = u.user_id
-        WHERE a.publication_id = $1
+        WHERE a.publication_id = $1 AND a.is_accepted = null
         ORDER BY a.publication_id;
     
         `,
