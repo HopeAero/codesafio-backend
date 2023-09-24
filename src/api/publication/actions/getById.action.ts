@@ -40,6 +40,7 @@ export const getPublicationById = async (
       s.skill_id AS skill_id,
       s.name AS skill_name,
       ar.level,
+      ar.quantity,
       TO_CHAR(ar.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
       FROM application_requirements AS ar
       INNER JOIN skills AS s ON ar.skill_id = s.skill_id
