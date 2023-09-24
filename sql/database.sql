@@ -87,6 +87,23 @@ CREATE TABLE collaborators (
     ON DELETE RESTRICT
 );
 
+CREATE TABLE user_skills (
+  user_id INTEGER NOT NULL,
+  skill_category_id INTEGER NOT NULL,
+  skill_id INTEGER NOT NULL,
+  level INTEGER NOT NULL,
+  PRIMARY KEY (user_id, skill_category_id, skill_id),
+  CONSTRAINT user_id_fk FOREIGN KEY (user_id) 
+    REFERENCES users (user_id)
+      ON UPDATE CASCADE
+      ON DELETE RESTRICT,
+  CONSTRAINT skills_fk FOREIGN KEY (skill_category_id, skill_id) 
+    REFERENCES skills (skill_category_id, skill_id)
+      ON UPDATE CASCADE
+      ON DELETE RESTRICT,
+  CONSTRAINT level_chk CHECK((level >= 1) AND (level <= 4))
+);
+
 CREATE TABLE application_requirements (
   publication_id INTEGER NOT NULL,
   skill_category_id INTEGER NOT NULL,

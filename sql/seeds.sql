@@ -35,8 +35,14 @@ INSERT INTO skills (
   (2, 'UX'),
   (2, 'Juegos');
 
-INSERT INTO publications (name, description, application_description, difficulty, status, user_lead_id, created_at, updated_at)
-VALUES
-  ('Publicación 1', 'Descripción de la publicación 1', 'Descripción de la aplicación 1', 3, 'not-started', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('Publicación 2', 'Descripción de la publicación 2', 'Descripción de la aplicación 2', 2, 'started', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('Publicación 3', 'Descripción de la publicación 3', 'Descripción de la aplicación 3', 4, 'finished', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO publications (
+  name, 
+  description, 
+  application_description, 
+  difficulty, 
+  user_lead_id
+) VALUES
+  ('Publicaci¾n 1', 'Descripci¾n de la publicación 1', 'Descripci¾n de la aplicación 1', 3, 1),
+  ('Publicaci¾n 2', 'Descripci¾n de la publicación 2', 'Descripci¾n de la aplicación 2', 2, 2),
+  ('Publicaci¾n 3', 'Descripci¾n de la publicación 3', 'Descripci¾n de la aplicación 3', 4, 3);
+  

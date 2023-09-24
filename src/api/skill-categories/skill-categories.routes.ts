@@ -7,11 +7,13 @@ import { getSkillCategoryById } from './actions/getById.action'
 import { addSkillCategory } from './actions/add.action'
 import { updateSkillCategory } from './actions/update.action'
 import { deleteSkillCategory } from './actions/delete.action'
+import { getAllSkillCategories } from './actions/getAll.action'
 // import { isAdmin } from '../../middlewares/auth'
 
 const router = Router()
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
+router.get('/all', getAllSkillCategories)
 router.get('/', getSkillCategories)
 router.get('/:skillCategoryId', getSkillCategoryById)
 router.post('/', schemaGuard(SkillCategorySchema), addSkillCategory)
