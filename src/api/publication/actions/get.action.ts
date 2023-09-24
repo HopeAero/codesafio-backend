@@ -4,6 +4,7 @@ import { pool } from '../../../database'
 import { DEFAULT_PAGE, STATUS } from '../../../utils/constants'
 import { PaginateSettings, paginatedItemsResponse } from '../../../utils/responses'
 import { handleControllerError } from '../../../utils/responses/handleControllerError'
+import camelizeObject from '../../../utils/camelizeObject'
 
 export const getPublications = async (
   req: ExtendedRequest,
@@ -81,7 +82,7 @@ export const getPublications = async (
       perPage: Number(size)
     }
 
-    return paginatedItemsResponse(res, STATUS.OK, publicationsData, pagination)
+    return paginatedItemsResponse(res, STATUS.OK, camelizeObject(publicationsData) as Array<Record<string, any>>, pagination)
   } catch (error: unknown) {
     console.log(error)
     return handleControllerError(error, res)

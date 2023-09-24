@@ -94,7 +94,7 @@ export const getApplications = async (
       page: Number(page),
       perPage: Number(size)
     }
-    return paginatedItemsResponse(res, STATUS.OK, camelizeObject(formattedResults) as any, pagination)
+    return paginatedItemsResponse(res, STATUS.OK, camelizeObject(formattedResults) as Array<Record<string, any>>, pagination)
   } catch (error: unknown) {
     console.log(error)
     return handleControllerError(error, res)
