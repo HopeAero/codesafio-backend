@@ -30,6 +30,7 @@ export const getApplications = async (
       SELECT
       a.publication_id,
       a.user_id,
+      u.name AS user_name,
       a.is_accepted,
       a.description AS application_description,
       TO_CHAR(a.created_at, 'DD/MM/YYYY - HH12:MI AM') AS application_created_at,
@@ -37,6 +38,7 @@ export const getApplications = async (
       p.*
       FROM applications AS a
       INNER JOIN publications AS p ON a.publication_id = p.publication_id
+      INNER JOIN users AS u ON a.user_id = u.user_id
       ORDER BY a.publication_id
       LIMIT $1 OFFSET $2;
       `,
@@ -59,6 +61,7 @@ export const getApplications = async (
         },
         applicationId: row.application_id,
         userId: row.user_id,
+        userName: row.user_name,
         isAccepted: row.is_accepted,
         applicationDescription: row.application_description,
         applicationCreatedAt: row.application_created_at,

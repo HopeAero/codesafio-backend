@@ -64,8 +64,8 @@ export const getUserById = async (
           updated_at
         FROM publications
         WHERE user_lead_id = $1
-        LIMIT 3
         ORDER BY created_at DESC
+        LIMIT 3
       `,
       values: [req.params.userId]
     })
@@ -82,8 +82,9 @@ export const getUserById = async (
         WHERE 
           user_id = $1 AND
           pub.status = 'finished'
+          ORDER BY created_at DESC
         LIMIT 3
-        ORDER BY created_at DESC
+        
       `,
       values: [req.params.userId]
     })
