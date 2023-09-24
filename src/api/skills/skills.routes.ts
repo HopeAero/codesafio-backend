@@ -16,8 +16,8 @@ const router = Router()
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 router.get('/all/category/:skillCategoryId', getAllSkills)
-router.get('/all', getVeryAll)
 router.get('/', getSkills)
+router.get('/all', getVeryAll)
 router.get('/:skillId', getSkillByID)
 router.post('/', schemaGuard(SkillSchema), addSkill)
 router.put('/:skillId', schemaGuard(UpdateSkillSchema), updateSkill)

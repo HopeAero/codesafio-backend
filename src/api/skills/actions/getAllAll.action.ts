@@ -11,13 +11,13 @@ export const getVeryAll = async (
   try {
     const { rows } = await pool.query({
       text: `
-        SELECT
-          skill_category_id,
-          skill_id
-          name,
-          TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-        FROM skills
-        ORDER BY skill_category_id, skill_id
+      SELECT
+      skill_category_id,
+      skill_id,
+      name,
+      TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
+    FROM skills
+    ORDER BY skill_category_id;    
       `
     })
     return res.status(STATUS.OK).json(camelizeObject(rows))
