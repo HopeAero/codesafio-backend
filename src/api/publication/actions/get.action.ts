@@ -23,6 +23,7 @@ export interface Skill {
   publicationId: number
   skillCategoryId: number
   skillId: number
+  skillName: string
   level: number
   createdAt: string
 }
@@ -74,14 +75,16 @@ export const getPublications = async (
     const response2 = await pool.query({
       text: `
       SELECT
-      publication_id,
-      skill_category_id,
-      skill_id,
-      level,
-      TO_CHAR(created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
-      FROM application_requirements
-      WHERE publication_id = $1
-      ORDER BY publication_id
+      ar.publication_id,
+      s.skill_category_id AS skill_category_id,
+      s.skill_id AS skill_id,
+      s.name AS skill_name,
+      ar.level,
+      TO_CHAR(ar.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
+      FROM application_requirements AS ar
+      INNER JOIN skills AS s ON ar.skill_id = s.skill_id
+      WHERE ar.publication_id = $1
+      ORDER BY ar.publication_id;
       `,
       values: [response.rows[0].publication_id]
     })
