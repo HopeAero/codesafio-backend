@@ -19,7 +19,7 @@ export const addCollaborator = async (
                 publication_id
                 user_id
             FROM applications
-            WHERE user_id = $1 AND publication_id = $2
+            WHERE user_id = $1 AND publication_id = $2 AND is_accepted = null
         `,
       values: [userId, publicationId]
     })
@@ -104,7 +104,7 @@ export const rejectCollaborator = async (
                 publication_id
                 user_id
             FROM applications
-            WHERE user_id = $1 AND publication_id = $2
+            WHERE user_id = $1 AND publication_id = $2 AND is_accepted = null
         `,
       values: [userId, publicationId]
     })
