@@ -28,15 +28,19 @@ export const getApplications = async (
     const { rows: response } = await pool.query({
       text: `
       SELECT
-        publication_id,
-        user_id,
-        is_accepted,
-        description AS application_description,
-        created_at,
-        updated_at
+        ap.publication_id,
+        pub.name AS publication_name,
+        ap.user_id,
+        us.name AS user_name,
+        ap.is_accepted,
+        ap.description AS application_description,
+        TO_CHAR(ap.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at,
+        TO_CHAR(ap.updated_at, 'DD/MM/YYYY - HH12:MI AM') AS updated_at
       FROM 
-        applications
-      ORDER BY publication_id DESC
+        applications AS ap,
+        publications AS pub,
+        users AS us
+      ORDER BY updated_at DESC
       LIMIT $1 OFFSET $2;
       `,
       values: [size, offset]
