@@ -90,3 +90,67 @@ export const addCollaborator = async (
     return handleControllerError(error, res)
   }
 }
+
+export const rejectCollaborator = async (
+  req: ExtendedRequest,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { userId, publicationId } = req.body
+    const userLeadId = req.user.id
+    const validate = await pool.query({
+      text: `
+            SELECT
+                publication_id
+                user_id
+            FROM applications
+            WHERE user_id = $1 AND publication_id = $2
+        `,
+      values: [userId, publicationId]
+    })
+
+    if (validate.rowCount === 0) {
+      throw new StatusError({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        message: `No se pudo encontrar un usuario que aplico a este Proyecto: ${publicationId} y Usuario ${userId}`,
+        statusCode: STATUS.NOT_FOUND
+      })
+    }
+
+    const validate2 = await pool.query({
+      text: `
+                SELECT
+                    publication_id
+                    user_lead_id
+                FROM publications
+                WHERE user_lead_id = $1 AND publication_id = $2
+            `,
+      values: [userLeadId, publicationId]
+    })
+
+    if (validate2.rowCount === 0) {
+      throw new StatusError({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        message: `No se pudo encontrar un usuario que lidera este Proyecto: ${publicationId} y Usuario ${userLeadId}`,
+        statusCode: STATUS.NOT_FOUND
+      })
+    }
+
+    await pool.query({
+      text: `
+            UPDATE applications
+            SET
+                    user_id = $1,
+                    publication_id = $2,
+                    is_accepted = false
+            WHERE user_id = $1 AND publication_id = $2
+        `,
+      values: [userId, publicationId]
+    })
+
+    return res.status(STATUS.CREATED).json({ message: 'Colaborador rechazado correctamente' })
+  } catch (error: unknown) {
+    console.log(error)
+    return handleControllerError(error, res)
+  }
+}

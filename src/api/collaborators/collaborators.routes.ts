@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { schemaGuard } from '../../middlewares/schemaGuard'
 import { CollaboratorSchema, UpdateApplicationSchema } from './collaborators.schema'
-import { addCollaborator } from './actions/add.action'
+import { addCollaborator, rejectCollaborator } from './actions/add.action'
 import { getCollaboratorAll } from './actions/getAll.action'
 import { getCollaborator } from './actions/get.action'
 import { getCollaboratorMineProject } from './actions/getMine.action'
@@ -18,6 +18,7 @@ router.get('/mine/:publicationId', getCollaboratorMineProject)
 router.get('/participate/:publicationId', getParticipate)
 router.get('/:publicationId', getCollaborator)
 router.post('/', schemaGuard(CollaboratorSchema), addCollaborator)
+router.post('/reject', schemaGuard(CollaboratorSchema), rejectCollaborator)
 router.put('/:publicationId/:userId', schemaGuard(UpdateApplicationSchema), updateCollaborator)
 router.delete('/:publicationId/:userId', deleteColaborator)
 
