@@ -47,6 +47,7 @@ export const getUserById = async (
           us.user_id = $1 AND
           sc.skill_category_id = us.skill_category_id AND
           s.skill_id = us.skill_id
+        ORDER BY us.level DESC
       `,
       values: [req.params.userId]
     })
@@ -63,6 +64,7 @@ export const getUserById = async (
           updated_at
         FROM publications
         WHERE user_lead_id = $1
+        ORDER BY created_at DESC
         LIMIT 3
       `,
       values: [req.params.userId]
@@ -81,7 +83,9 @@ export const getUserById = async (
         WHERE 
           user_id = $1 AND
           pub.status = 'finished'
+          ORDER BY created_at DESC
         LIMIT 3
+        
       `,
       values: [req.params.userId]
     })
