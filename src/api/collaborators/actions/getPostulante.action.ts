@@ -35,6 +35,7 @@ export const getPostulent = async (
         SELECT
         a.user_id,
         u.name AS user_name,
+        a.description,
         a.publication_id,
         TO_CHAR(a.created_at, 'DD/MM/YYYY - HH12:MI AM') AS created_at
         FROM applications AS a
