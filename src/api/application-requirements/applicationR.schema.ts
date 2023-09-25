@@ -3,7 +3,8 @@ import { z } from 'zod'
 export const ApplicationRequirementSchema = z.object({
   publicationId: z
     .number()
-    .min(1, 'El id de la publicacion debe ser mayor o igual a 1'),
+    .min(1, 'El id de la publicacion debe ser mayor o igual a 1')
+    .optional(),
   skillCategoryId: z
     .number()
     .min(1, 'El id de la categoria skill debe ser mayor o igual a 1'),

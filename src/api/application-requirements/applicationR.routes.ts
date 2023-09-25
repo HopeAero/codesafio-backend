@@ -12,7 +12,7 @@ const router = Router()
 /* eslint-disable @typescript-eslint/no-misused-promises */
 router.get('/', getAllRequirements)
 router.get('/search', getAllSearch)
-router.post('/', schemaGuard(ApplicationRequirementSchema), addApplicationRequirements)
+router.post('/publication/:publicationId', schemaGuard(ApplicationRequirementSchema), addApplicationRequirements)
 router.put('/:publicationId/:skillCategoryId/:skillId', schemaGuard(ApplicationRequirementUpdateSchema), updateRequirement)
 router.delete('/:publicationId/:skillCategoryId/:skillId', deleteRequirement)
 
