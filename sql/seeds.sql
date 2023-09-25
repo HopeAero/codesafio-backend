@@ -118,7 +118,7 @@ INSERT INTO applications (
   created_at
 ) VALUES
   -- Offside
-  (1, 1, TRUE, 'Me llama la atención la idea considero que podría trabajar en una aplicación movil para la idea', '2022-08-30 19:00:00');
+  (1, 1, TRUE, 'Me llama la atenci¾n la idea considero que podrÝa trabajar en una aplicaci¾n movil para la idea', '2022-08-30 19:00:00');
 
 INSERT INTO collaborators (
   publication_id,
