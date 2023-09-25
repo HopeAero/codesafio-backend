@@ -12,19 +12,19 @@ export const addApplicationRequirements = async (
 ): Promise<Response> => {
   try {
     const userLeaderId = req.user.id
-    const { publicationId, skillCategoryId, skillId, level, quantity } = req.body
+    const { skillCategoryId, skillId, level, quantity } = req.body
     const verifyPublication = await pool.query({
       text: `
             SELECT *
             FROM publications
             WHERE publication_id = $1 AND user_lead_id = $2
             `,
-      values: [publicationId, userLeaderId]
+      values: [req.params.publicationId, userLeaderId]
     })
     if (verifyPublication.rowCount === 0) {
       throw new StatusError({
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        message: `No se pudo encontrar la publicacion con id: ${publicationId} y user_lead_id: ${userLeaderId}`,
+        message: `No se pudo encontrar la publicacion con id: ${req.params.publicationId} y user_lead_id: ${userLeaderId}`,
         statusCode: STATUS.NOT_FOUND
       })
     }
@@ -70,7 +70,7 @@ export const addApplicationRequirements = async (
                 VALUES ($1, $2, $3, $4, $5)
             RETURNING *
             `,
-      values: [publicationId, skillCategoryId, skillId, level, quantity]
+      values: [req.params.publicationId, skillCategoryId, skillId, level, quantity]
     })
     const response = await pool.query({
       text: `
@@ -84,7 +84,7 @@ export const addApplicationRequirements = async (
             FROM application_requirements
             WHERE publication_id = $1 AND skill_category_id = $2 AND skill_id = $3 AND level = $4 AND quantity = $5
             `,
-      values: [publicationId, skillCategoryId, skillId, level, quantity]
+      values: [req.params.publicationId, skillCategoryId, skillId, level, quantity]
     })
     return res.status(STATUS.CREATED).json(camelizeObject(response.rows[0]))
   } catch (error: unknown) {
