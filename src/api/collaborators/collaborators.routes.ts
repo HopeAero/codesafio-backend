@@ -20,7 +20,7 @@ router.get('/mine/:publicationId', getCollaboratorMineProject)
 router.get('/participate/:publicationId', getParticipate)
 router.get('/:publicationId', getCollaborator)
 router.post('/', schemaGuard(CollaboratorSchema), addCollaborator)
-router.post('/reject', schemaGuard(CollaboratorSchema), rejectCollaborator)
+router.post('/reject', rejectCollaborator)
 router.put('/:publicationId/:userId', schemaGuard(UpdateApplicationSchema), updateCollaborator)
 router.delete('/:publicationId/:userId', deleteColaborator)
 
